@@ -49,6 +49,18 @@
     endif
   endif
 
+  # ADDED (Step 3.2) - UPCASE FILTER
+  # Converts the vendor name to capitals for a small brand label
+  # above the card content ("SoundCraft Audio" -> "SOUNDCRAFT AUDIO").
+  assign vendor_label = product.vendor | upcase
+
+  # ADDED (Step 3.2) - HANDLEIZE FILTER
+  # Turns the product type into a URL-safe, lowercase, hyphenated string
+  # ("Studio Headphones" -> "studio-headphones") so it is safe to use as
+  # a CSS class and data attribute. default: 'general' covers products
+  # that have no type set, which would otherwise produce a trailing dash.
+  assign type_handle = product.type | handleize | default: 'general'
+
   assign onboarding = false
   if product.id == empty or product == blank
     assign onboarding = true
@@ -88,6 +100,25 @@
     ref="productCardLink"
     aria-label="{{ product.title | escape }}"
   ></a>
+  {% comment %}
+    ============================================================
+    ADDED (Step 3.2) - output for the upcase and handleize filters.
+    The unless guard keeps the label off placeholder cards that the
+    theme editor renders when no product is assigned.
+    ============================================================
+  {% endcomment %}
+  {%- unless onboarding -%}
+    {% if product.vendor != blank %}
+      <p
+        class="product-card__vendor product-card__vendor--{{ type_handle }}"
+        data-product-type="{{ type_handle }}"
+      >
+        {{ vendor_label }}
+      </p>
+    {% endif %}
+  {%- endunless -%}
+  {% comment %} END ADDED {% endcomment %}
+
   <div
     class="
       product-card__content
