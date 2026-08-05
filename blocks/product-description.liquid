@@ -1,10 +1,39 @@
 {% liquid
-  assign product = block.settings.product
+  # CHANGED (Step 2.3): was block.settings.product, which does not exist in
+  # this block's schema and was therefore always blank on the storefront.
+  # closest.product resolves the product from the surrounding context.
+  assign product = closest.product
+
+  # Use the first product when previewing in the Theme Editor
   if request.visual_preview_mode and product == blank
     assign product = collections.all.products.first
-    assign text = product.description
   endif
+
+  # ADDED (Step 2.2) - TEXT FILTER
+  # strip_html removes the markup Shopify stores in the description,
+  # then truncate: 180 caps the result at 180 characters including the
+  # trailing ellipsis. Order matters: truncating first could cut a tag
+  # in half and leave broken markup behind.
+  assign text = product.description | strip_html | truncate: 180
 %}
+
+{% comment %}
+  ============================================================
+  ADDED (Step 2.3) - CONDITIONAL
+  Renders a stock message from the selected variant's inventory.
+  Uses closest.product (see above) so both branches can be reached.
+  ============================================================
+{% endcomment %}
+{% if product.selected_or_first_available_variant.inventory_quantity > 10 %}
+  <p style="color: green; font-weight: bold;">
+    In Stock - Ready to Ship
+  </p>
+{% else %}
+  <p style="color: red; font-weight: bold;">
+    Limited Stock - Order Soon
+  </p>
+{% endif %}
+{% comment %} END ADDED {% endcomment %}
 
 {% render 'text', fallback_text: text, block: block %}
 

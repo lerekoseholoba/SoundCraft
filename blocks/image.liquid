@@ -38,6 +38,29 @@
   assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
 %}
 
+{% comment %}
+  ============================================================
+  ADDED (Step 2.2) - IMAGE FILTER
+  A square thumbnail generated with image_url.
+  width and height set the output dimensions, and crop: 'center'
+  tells the CDN how to trim an image whose aspect ratio does not
+  match, rather than squashing it.
+  This is separate from the main image below so the block's normal
+  responsive behaviour is left intact.
+  ============================================================
+{% endcomment %}
+{% if block_settings.image %}
+  <img
+    src="{{ block_settings.image | image_url: width: 200, height: 200, crop: 'center' }}"
+    alt="{{ block_settings.image.alt | escape }}"
+    width="200"
+    height="200"
+    class="image-block__thumb"
+    loading="lazy"
+  >
+{% endif %}
+{% comment %} END ADDED {% endcomment %}
+
 {% capture image %}
   {%- if block_settings.image -%}
     {{
