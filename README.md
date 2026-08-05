@@ -73,3 +73,53 @@ has been created.*
 
 **Hot Reload Verification:** *Pending completion of
 `shopify theme dev`.*
+
+# SoundCraft – Day 2 Planning
+
+## Part 1 – Filter Inventory
+
+### Filter 1: `money`
+
+* **Section/File:** `sections/main-product.liquid`
+* **Purpose:** Formats the product price as South African Rand currency, making prices easier for customers to read.
+
+### Filter 2: `image_url`
+
+* **Section/File:** `snippets/card-product.liquid`
+* **Purpose:** Generates the correct URL for each product's featured image so that product cards display optimized images.
+
+### Filter 3: `upcase`
+
+* **Section/File:** `snippets/card-product.liquid`
+* **Purpose:** Displays the product brand or instrument category in uppercase to improve visibility and create a consistent design.
+
+### Filter 4: `truncate`
+
+* **Section/File:** `snippets/card-product.liquid`
+* **Purpose:** Shortens long product descriptions on collection pages so that product cards remain uniform in height and easier to browse.
+
+### Filter 5: `handleize`
+
+* **Section/File:** `sections/main-collection-product-grid.liquid`
+* **Purpose:** Converts collection or tag names into URL-friendly handles for links and HTML identifiers.
+
+---
+
+## Part 2 – Conditional Logic Plan
+
+### Liquid Object / Property
+
+`product.selected_or_first_available_variant.inventory_quantity`
+
+### Conditional Logic
+
+If the selected product variant has an inventory quantity greater than zero, the product page will display an **"In Stock"** message and allow customers to add the item to their cart.
+
+If the selected product variant has no available inventory, the page will display an **"Out of Stock"** message and disable or hide the **Add to Cart** button to prevent unavailable purchases.
+
+### Location
+
+The conditional logic will be implemented in:
+
+`sections/main-product.liquid`
+

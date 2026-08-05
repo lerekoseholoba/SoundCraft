@@ -54,6 +54,24 @@
     product_resource: product_resource,
     show_sale_price_first: block_settings.show_sale_price_first
   %}
+  {% comment %}
+  Display a stock availability message based on the inventory quantity
+  of the selected (or first available) product variant.
+{% endcomment %}
+
+{% if selected_variant.inventory_quantity > 10 %}
+  <p style="color: green; font-weight: bold;">
+    ✓ In Stock – Ready to Ship
+  </p>
+{% elsif selected_variant.inventory_quantity > 0 %}
+  <p style="color: orange; font-weight: bold;">
+    ⚠ Limited Stock – Only {{ selected_variant.inventory_quantity }} left!
+  </p>
+{% else %}
+  <p style="color: red; font-weight: bold;">
+    ✗ Out of Stock
+  </p>
+{% endif %}
 
   {% if block_settings.show_tax_info %}
     <div class="tax-note">
